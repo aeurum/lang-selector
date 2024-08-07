@@ -5,7 +5,7 @@ import { official } from './official'
 export { selectLanguage }
 
 function normalize(subtags) {
-  return [ iso639[subtags[0]] ?? subtags[0], ...subtags.slice(1) ].join('-')
+  return [ iso639[subtags[0]] ?? subtags[0], ...subtags.slice(1) ]
 }
 function lower(array) {
   return array.map(value => value.toLowerCase())
@@ -40,10 +40,10 @@ function getSupported(tags, sups, languages) {
 
 function selectLanguage(tag, languages) {
   if (!tag) return languages.default
-  const subtags = lower(crack(tag))
+  const subtags = normalize(lower(crack(tag)))
   const suptags = lower(languages.supported)
   const supsubs = primarize(suptags)
-  tag = normalize(subtags)
+  tag = subtags.join('-')
   if (suptags.includes(tag))
     return languages.supported[suptags.indexOf(tag)]
   const sub = primary(tag)
