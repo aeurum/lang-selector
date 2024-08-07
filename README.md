@@ -5,7 +5,7 @@
 ## Installation
 
 ```
-npm i --save lang-selector
+npm i lang-selector
 ```
 
 ## Usage
@@ -19,6 +19,7 @@ const languages = {
   supported: [
     'ja',
     'fr',
+    'da',
     'es',
     'wal',
     'tr',
@@ -40,6 +41,7 @@ for (const tag of [
   'pt-BR',          // pt-PT
   'it',             // ja
   'it-CH',          // fr
+  'nob',            // da
   'tr',             // tr
   'tur-CY',         // tr-CY
   'uk',             // ru-RU
