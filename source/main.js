@@ -23,14 +23,19 @@ function fetch(subtags, outof = official) {
   for (const subtag of subtags) if (outof[subtag]) return outof[subtag]
 }
 
+function tieTag(tag, sub, suptags, supsubs, languages) {
+  const tags = ties[tag] ?? [ ]
+  return getSupported(tags, suptags, languages) ??
+    getSupported(primarize(tags), supsubs, languages)
+}
 function tagByCountry(subtags, suptags, supsubs, languages) {
-  const tags = fetch(subtags.slice(1))
+  const tags = fetch(subtags.slice(1)) ?? [ ]
+  return getSupported(tags, suptags, languages) ??
+    getSupported(primarize(tags), supsubs, languages)
+}
+function getSupported(tags, sups, languages) {
   if (!tags) return; else for (const tag of tags)
-    if (suptags.includes(tag)) return languages.supported[suptags.indexOf(tag)]
-  const subs = primarize(tags)
-  if (!subs) return; else for (const sub of subs) {
-    if (supsubs.includes(sub)) return languages.supported[supsubs.indexOf(sub)]
-  }
+    if (sups.includes(tag)) return languages.supported[sups.indexOf(tag)]
 }
 
 function selectLanguage(tag, languages) {
@@ -44,11 +49,6 @@ function selectLanguage(tag, languages) {
   const sub = primary(tag)
   if (supsubs.includes(sub))
     return languages.supported[supsubs.indexOf(sub)]
-  const tieByTag = ties[tag]
-  if (supsubs.includes(tieByTag))
-    return languages.supported[supsubs.indexOf(tieByTag)]
-  const tieBySub = ties[sub]
-  if (supsubs.includes(tieBySub))
-    return languages.supported[supsubs.indexOf(tieBySub)]
-  return tagByCountry(subtags, suptags, supsubs, languages) ?? languages.default
+  const tie = tieTag(tag, sub, suptags, supsubs, languages)
+  return tie ?? tagByCountry(subtags, suptags, supsubs, languages) ?? languages.default
 }
